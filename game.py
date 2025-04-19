@@ -1,6 +1,7 @@
 import random
 
 
+
 types = ["hearts", "diamonds", "spades", "clubs"]
 num = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
 
@@ -168,9 +169,12 @@ while running:
     again = input("Play another round? (y/n): ").lower()
     if again != "y":
         print("Ok your final balance is: ", balance)
+        print("Thank you for playing")
+        
         running = False
     
-    
+
+
 
     
 
