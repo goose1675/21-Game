@@ -16,7 +16,7 @@ for t in types:
 
 def add_card_points(card, to_dealer=True): # A function that when called, gives the player or dealer a score of points depending on the cards in their hand
 
-    global dealer_point, playerpoint
+    global dealer_point, player_point
 
     if "ace" in card:
         if to_dealer: 
@@ -25,7 +25,7 @@ def add_card_points(card, to_dealer=True): # A function that when called, gives 
             else:
                 points = 1
         else:
-            if playerpoint + 11 <= 21:
+            if player_point + 11 <= 21:
                 points = 11
             else:
                 points = 1
@@ -38,7 +38,7 @@ def add_card_points(card, to_dealer=True): # A function that when called, gives 
     if to_dealer:
         dealer_point += points # If called to give a dealer points, to_dealer stays as a default: True
     else:
-        playerpoint += points# If called to give the player points, to_dealer is False,
+        player_point += points# If called to give the player points, to_dealer is False,
 
         
     
@@ -57,7 +57,14 @@ winnings = 0
 running = True
 
 while running: # The game loop 
-    playerpoint = 0 # Variable for the total points the player recieves based off their cards
+    if len(cards) < 15:
+        cards = []
+        for t in types:
+            for n in num:
+                cards.append(n + "of" + t)
+        print("Cards have been reshuffled!") 
+
+    player_point = 0 # Variable for the total points the player recieves based off their cards
     dealer_point=0  # Variable for the total points the dealer recieves based off their cards 
     print("Your balance is at $", balance,  ".")
     bet = int(input("How much would you like to bet? "))
@@ -80,7 +87,7 @@ while running: # The game loop
    
     print("The player's first card is ", playercard_1)
     add_card_points(playercard_1, to_dealer=False) #The players card is printed and a value is assigned
-    print(playerpoint)
+    print(player_point)
 
 
     print("The dealer's first card is ", dealercard_1)
@@ -93,9 +100,9 @@ while running: # The game loop
     
     print("The player's second card is ", playercard_2)
     add_card_points(playercard_2, to_dealer=False)
-    print(playerpoint)
+    print(player_point)
 
-    if playerpoint == 21: #An auto win condition that shows that if the player hits 21, then they win 
+    if player_point == 21: #An auto win condition that shows that if the player hits 21, then they win 
         print("Auto win!")
         winnings = bet * 1.5
         print("You win ", winnings)
@@ -103,15 +110,15 @@ while running: # The game loop
         print("Balance: ", balance)
         
 
-    elif playerpoint < 21:
+    elif player_point < 21:
         choice = input("Would you like to hit (draw a new card) (h) or stand (keep your current hand) (s)? ").lower()
         while choice == "h":
             playercard_extra = random.choice(cards)
             cards.remove(playercard_extra)
             print("You draw: ", playercard_extra)
             add_card_points(playercard_extra, to_dealer=False)
-            print("Player point total: ", playerpoint)
-            if playerpoint >= 21:
+            print("Player point total: ", player_point)
+            if player_point >= 21:
                 break
             choice = input("Hit again (h) or stand (s)? ").lower()
 
@@ -130,7 +137,7 @@ while running: # The game loop
     
     if dealer_point == 21:
         print("Dealer has Blackjack!")
-        if playerpoint == 21:
+        if player_point == 21:
             print("It's a tie!")
             balance += bet  # refund
         else:
@@ -140,7 +147,7 @@ while running: # The game loop
     
 
     
-    while dealer_point <= 16 and playerpoint < 21:
+    while dealer_point <= 16 and player_point < 21:
         dealercard_extra = random.choice(cards)
         cards.remove(dealercard_extra)
         print("Dealer draws:", dealercard_extra)
@@ -149,16 +156,16 @@ while running: # The game loop
         print("Dealer total:", dealer_point)
 
 
-    if playerpoint > 21:
+    if player_point > 21:
         print("Bust! Dealer wins.")
-        break
-    elif dealer_point > 21 and playerpoint <  21:
+        continue
+    elif dealer_point > 21 and player_point <  21:
         print("Dealer busts! You win!")
         balance += bet * 2
-    elif playerpoint > dealer_point:
+    elif player_point > dealer_point:
         print("You win!")
         balance += bet * 2
-    elif playerpoint < dealer_point:
+    elif player_point < dealer_point:
         print("Dealer wins.")
     
     else:
@@ -167,8 +174,7 @@ while running: # The game loop
 
     
  
-
-    
+   
 
 
     print("Your new balance is ", balance)
@@ -177,6 +183,7 @@ while running: # The game loop
         print("Ok your final balance is: ", balance)
         print("Thank you for playing")
         
+
         running = False
     
 
