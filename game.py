@@ -1,6 +1,6 @@
 import random
 
-
+#hello
 
 types = ["hearts", "diamonds", "spades", "clubs"]
 num = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
