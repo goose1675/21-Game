@@ -1,0 +1,2 @@
+write an application for blackjack card game in python. Create a player object that can be instantiated by passing a balance amount. Player object should contain functions to make a bet or pass by taking input from the terminal.
+
