@@ -56,6 +56,10 @@ while running:
     dealer_point=0
     print("Your balance is at $", balance,  ".")
     bet = int(input("How much would you like to bet? "))
+    while bet >= balance:
+        print("You must bet less than or equal to your balance!")
+        bet = int(input("How much would you like to bet? "))
+
     balance = balance - bet
     print("Ok, you have placed your bet!")
 
@@ -126,7 +130,7 @@ while running:
             balance += bet  # refund
         else:
             print("Dealer wins.")
-        running = False
+        
         continue
     
 
@@ -160,10 +164,12 @@ while running:
     
 
 
-
+    print("Your new balance is ", balance)
     again = input("Play another round? (y/n): ").lower()
     if again != "y":
+        print("Ok your final balance is: ", balance)
         running = False
+    
     
 
     
