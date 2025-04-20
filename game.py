@@ -5,40 +5,52 @@ import random
 types = ["hearts", "diamonds", "spades", "clubs"]
 num = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
 
-cards = []
-for t in types:
-    for n in num:
-        cards.append(n + "of" + t) 
+def create_deck(): # A function that creates a deck of cards with 52 cards in total. 
+    deck = []
+    for t in types:
+        for n in num:
+            deck.append(n + " of " + t) 
+    return deck
 
 #This creates a deck of cards. The cards are lited as "ace of hearts", "2 of hearts", "3 of hearts"... and so on for 52 cards 
 # Types stores the type of card, while num stores its number/value  
 
 
-def add_card_points(card, to_dealer=True): # A function that when called, gives the player or dealer a score of points depending on the cards in their hand
-
-    global dealer_point, player_point
-
-    if "ace" in card:
-        if to_dealer: 
-            if dealer_point + 11 <= 21: #An if statement that decides if the ace should be counted as 10 point or 1 point, depending on the player or dealer's other cards. 
-                points = 11 
-            else:
-                points = 1
+class Player:# My first class that stores the player and dealer's information.
+    def __init__(self, name, is_dealer=False): 
+        self.name = name
+        self.hand = [] # The hand is a list that stores the cards the player has in their hand.
+        self.points = 0
+        self.is_dealer = is_dealer #A way to check if the player is a dealer 
+        if is_dealer!= True: 
+            self.balance = 1000
         else:
-            if player_point + 11 <= 21:
-                points = 11
+            self.balance = 0
+    
+    def add_card(self, card):
+        self.hand.append(card)
+        self.calculate_points(card)
+
+    def calculate_points(self, card):
+        if "ace" in card:
+            if self.points + 11 <= 21:
+                self.points += 11
             else:
-                points = 1
+                self.points += 1
+        elif "jack" in card or "queen" in card or "king" in card or "10" in card:
+            self.points += 10
+        else:
+            self.points += int(card.split("of")[0])
+
+    def reset_hand(self):
+        self.hand = []
+        self.points = 0
     
-    elif "jack" in card or "queen" in card or "king" in card or "10" in card:
-        points = 10
-    else:
-        points = int(card.split("of")[0])
+    def __str__(self):
+        return self.name +  "'s hand: " + str(self.hand) + "| Points: " +  str(self.points)
     
-    if to_dealer:
-        dealer_point += points # If called to give a dealer points, to_dealer stays as a default: True
-    else:
-        player_point += points# If called to give the player points, to_dealer is False,
+
+
 
         
     
@@ -51,147 +63,105 @@ def add_card_points(card, to_dealer=True): # A function that when called, gives 
 
 
 
-
-balance = 1000 #A set balance that every player starts with 
-winnings = 0
-running = True
-
-while running: # The game loop 
-    if len(cards) < 15:
-        cards = []
-        for t in types:
-            for n in num:
-                cards.append(n + "of" + t)
-        print("Cards have been reshuffled!") 
-
-    player_point = 0 # Variable for the total points the player recieves based off their cards
-    dealer_point=0  # Variable for the total points the dealer recieves based off their cards 
-    print("Your balance is at $", balance,  ".")
-    bet = int(input("How much would you like to bet? "))
-    while bet >= balance:
-        print("You must bet less than or equal to your balance!") #Insures that the bet is not more than the balance
-        bet = int(input("How much would you like to bet? "))
-
-    balance = balance - bet
-    print("Ok, you have placed your bet!") 
-
-
+#game loop function
+def blackjack():
+    deck = create_deck() # The deck is created using the create_deck function
+    random.shuffle(deck) # This shuffles the deck to make sure the cards are random
     
-    playercard_1 = random.choice(cards) # The player's first card is pulled and then removed from the deck so it cant be pulled again by anyone else.
-    cards.remove(playercard_1)
-    
-    dealercard_1 = random.choice(cards)# The dealer's first card is pulled and then removed from the deck so it cant be pulled again by anyone else.
-    cards.remove(dealercard_1)
-  
-
+    num_players = int(input("How many players are playing? (1-3): "))
+    players = [Player(input("Enter a name for player" + str(i +1) + ": ")) for i in range(num_players)]
+    dealer = Player("Dealer", is_dealer=True) 
    
-    print("The player's first card is ", playercard_1)
-    add_card_points(playercard_1, to_dealer=False) #The players card is printed and a value is assigned
-    print(player_point)
+    running = True
+    # This keeps tge game running until the player decides to quit.
+    while running: # The game loop 
+        if len(deck) < 15:
+            new_deck = create_deck()
+            random.shuffle(new_deck)
 
 
-    print("The dealer's first card is ", dealercard_1)
-    add_card_points(dealercard_1, to_dealer=True)  #The dealers card is printed and a value is assigned
-    print(dealer_point)
+
+        for player in players:
+            player.reset_hand()
+        dealer.reset_hand()
+
+        bets = {}
+        for player in players: 
+            print("\n" + str(player.name) + "'s balance: " + str(player.balance))
+            while True:
+                bet = int(input("\n" + str(player.name) + ", enter your bet: "))
+                if bet <= player.balance:
+                    break
+                print("Bet must be less than or equal to your balance.")
+            player.balance -= bet 
+            bets[player.name] = bet # This stores the players name and their bet in bets = {}  
+
+        for player in players:
+            for i in range(2):
+                player.add_card(deck.pop()) #pop removes the last card in the deck and adds it to the players hand      
+            print(player) # This prints the players hand and their points
+            # for example: "Player 1's hand: ['ace of hearts', '2 of hearts'] | Points: 13"
 
 
-    playercard_2 = random.choice(cards)
-    cards.remove(playercard_2)
-    
-    print("The player's second card is ", playercard_2)
-    add_card_points(playercard_2, to_dealer=False)
-    print(player_point)
+        for i in range(2): # twice for the dealer                                        
+            dealer.add_card(deck.pop()) #removes the las t card in the deck and adds it to the dealers hand
+        print("\nDealer's hand: " + str(dealer.hand[0]) + " and a hidden card\n") # This prints the dealers hand with one card hidden
+        #for example: "Dealer's hand: ['ace of hearts', '2 of hearts'] and a hidden card"
 
-    if player_point == 21: #An auto win condition that shows that if the player hits 21, then they win 
-        print("Auto win!")
-        winnings = bet * 1.5
-        print("You win ", winnings)
-        balance += winnings
-        print("Balance: ", balance)
-        
-
-    elif player_point < 21:
-        choice = input("Would you like to hit (draw a new card) (h) or stand (keep your current hand) (s)? ").lower()
-        while choice == "h":
-            playercard_extra = random.choice(cards)
-            cards.remove(playercard_extra)
-            print("You draw: ", playercard_extra)
-            add_card_points(playercard_extra, to_dealer=False)
-            print("Player point total: ", player_point)
-            if player_point >= 21:
-                break
-            choice = input("Hit again (h) or stand (s)? ").lower()
-
-        
-
-    dealercard_2 = random.choice(cards)
-    cards.remove(dealercard_2)
-    print("The dealer's second card is ", dealercard_2)
-    add_card_points(dealercard_2, to_dealer=True)
-
-    print(dealer_point)
-    
+        for player in players: #each playur gets to play their turn
+            while player.points < 21: # The player can keep hitting until they reach 21 or bust
+                choice = input(str(player.name) + ", do you want to hit (h) or stand (s)? ").lower()
+                if choice == "h":
+                    card = deck.pop() # The player draws a card from the deck
+                    print("You drew: " + card)
+                    player.add_card(card)
+                    print(player) # This prints the players hand and their points
+                else:
+                    break #This breaks the loop and ends the players turn
 
 
-    
-    
-    if dealer_point == 21:
-        print("Dealer has Blackjack!")
-        if player_point == 21:
-            print("It's a tie!")
-            balance += bet  # refund
-        else:
-            print("Dealer wins.")
-        
-        continue
-    
-
-    
-    while dealer_point <= 16 and player_point < 21:
-        dealercard_extra = random.choice(cards)
-        cards.remove(dealercard_extra)
-        print("Dealer draws:", dealercard_extra)
-        add_card_points(dealercard_extra, to_dealer=True)
-
-        print("Dealer total:", dealer_point)
+        print("\nDealer's turn:") # The dealer's turn starts here
+        print(dealer) # This prints the dealers hand and their points       
+        while dealer.points < 17: 
+              card = deck.pop() # The dealer draws a card from the deck
+              dealer.add_card(card) # The card is added to the dealers hand
+              print("Dealer drew: " + card  + " | Points:" + str(dealer.points)) # This prints the dealers hand and their points
 
 
-    if player_point > 21:
-        print("Bust! Dealer wins.")
-        continue
-    elif dealer_point > 21 and player_point <  21:
-        print("Dealer busts! You win!")
-        balance += bet * 2
-    elif player_point > dealer_point:
-        print("You win!")
-        balance += bet * 2
-    elif player_point < dealer_point:
-        print("Dealer wins.")
-    
-    else:
-        print("It's a tie!")
-        balance += bet
+        print("\n ----Final Results----") # The final results are printed here
+        for player in players: 
+            print("\n" + str(player.name) + ":" + str(player.points) + "vs Dealer:" + str(dealer.points)) 
+            # This prints the players hand and their points vs the dealers hand and their points
+            # for example: "Player 1: 13 vs Dealer: 17"
+            
 
-    
- 
-   
+            if player.points > 21: # If the player busts, they lose
+                print(player.name + " busts! Dealer wins.")
+                print("Your new balance is: " + str(player.balance))
+
+            elif dealer.points > 21 or player.points > dealer.points: 
+            # If the dealer busts or the player has a higher score, the player wins 
+                winnings = bets[player.name] * 2
+                player.balance += winnings
+                print(player.name + " wins! You win $" + str(winnings) + ".")
+                print("Your new balance is: " + str(player.balance))
+            elif player.points == dealer.points:
+                player.balance += bets[player.name]
+                print(player.name + " ties with the dealer. Your bet is returned.")    
+            else: # If the dealer has a higher score, the dealer wins
+                print(player.name + " loses. Dealer wins.")
+                print("Your new balance is: " + str(player.balance))
 
 
-    print("Your new balance is ", balance)
-    again = input("Play another round? (y/n): ").lower()
-    if again != "y":
-        print("Ok your final balance is: ", balance)
-        print("Thank you for playing")
-        
-
-        running = False
+        again = input("\nPlay another round? (y/n): ").lower()
+        if again != "y":
+            print("Thank you for playing")
+            running = False
     
 
 
-
-    
-
-
+# Start the game
+blackjack()
 
 
 
