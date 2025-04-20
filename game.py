@@ -22,6 +22,7 @@ class Player:# My first class that stores the player and dealer's information.
         self.hand = [] # The hand is a list that stores the cards the player has in their hand.
         self.points = 0
         self.is_dealer = is_dealer #A way to check if the player is a dealer 
+        self.blackjack = False # A way to check if the player has a blackjack
         if is_dealer!= True: 
             self.balance = 1000
         else:
@@ -45,6 +46,7 @@ class Player:# My first class that stores the player and dealer's information.
     def reset_hand(self):
         self.hand = []
         self.points = 0
+        self.blackjack = False
     
     def __str__(self):
         return self.name +  "'s hand: " + str(self.hand) + "| Points: " +  str(self.points)
@@ -102,13 +104,25 @@ def blackjack():
             print(player) # This prints the players hand and their points
             # for example: "Player 1's hand: ['ace of hearts', '2 of hearts'] | Points: 13"
 
+        if player.points == 21:
+            player.blackjack = True
+            winnings = int(bets[player.name] * 1.5)
+            player.balance += bets[player.name] + winnings
+            print("\n", player.name, " hits BLACKJACK! You win $", winnings, "!")
+            print("Your new balance is: $", player.balance)
+
 
         for i in range(2): # twice for the dealer                                        
             dealer.add_card(deck.pop()) #removes the las t card in the deck and adds it to the dealers hand
         print("\nDealer's hand: " + str(dealer.hand[0]) + " and a hidden card\n") # This prints the dealers hand with one card hidden
         #for example: "Dealer's hand: ['ace of hearts', '2 of hearts'] and a hidden card"
 
-        for player in players: #each playur gets to play their turn
+        for player in players: #each playur gets to play their turn 
+            
+            if player.blackjack:
+                continue  # Skip turn if player already has Blackjack
+
+            
             while player.points < 21: # The player can keep hitting until they reach 21 or bust
                 choice = input(str(player.name) + ", do you want to hit (h) or stand (s)? ").lower()
                 if choice == "h":
