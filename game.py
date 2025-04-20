@@ -1,4 +1,5 @@
 import random
+from player_class import Player # This imports the Player class from the player_class file
 
 #hello
 
@@ -16,41 +17,7 @@ def create_deck(): # A function that creates a deck of cards with 52 cards in to
 # Types stores the type of card, while num stores its number/value  
 
 
-class Player:# My first class that stores the player and dealer's information.
-    def __init__(self, name, is_dealer=False): 
-        self.name = name
-        self.hand = [] # The hand is a list that stores the cards the player has in their hand.
-        self.points = 0
-        self.is_dealer = is_dealer #A way to check if the player is a dealer 
-        self.blackjack = False # A way to check if the player has a blackjack
-        if is_dealer!= True: 
-            self.balance = 1000
-        else:
-            self.balance = 0
-    
-    def add_card(self, card):
-        self.hand.append(card)
-        self.calculate_points(card)
 
-    def calculate_points(self, card):
-        if "ace" in card:
-            if self.points + 11 <= 21:
-                self.points += 11
-            else:
-                self.points += 1
-        elif "jack" in card or "queen" in card or "king" in card or "10" in card:
-            self.points += 10
-        else:
-            self.points += int(card.split("of")[0])
-
-    def reset_hand(self):
-        self.hand = []
-        self.points = 0
-        self.blackjack = False
-    
-    def __str__(self):
-        return self.name +  "'s hand: " + str(self.hand) + "| Points: " +  str(self.points)
-    
 
 
 
@@ -139,12 +106,12 @@ def blackjack():
         while dealer.points < 17: 
               card = deck.pop() # The dealer draws a card from the deck
               dealer.add_card(card) # The card is added to the dealers hand
-              print("Dealer drew: " + card  + " | Points:" + str(dealer.points)) # This prints the dealers hand and their points
+              print("Dealer drew: " + card  + " | Points: " + str(dealer.points)) # This prints the dealers hand and their points
 
 
         print("\n ----Final Results----") # The final results are printed here
         for player in players: 
-            print("\n" + str(player.name) + ":" + str(player.points) + "vs Dealer:" + str(dealer.points)) 
+            print("\n" + str(player.name) + ": " + str(player.points) + " vs Dealer: " + str(dealer.points)) 
             # This prints the players hand and their points vs the dealers hand and their points
             # for example: "Player 1: 13 vs Dealer: 17"
             
