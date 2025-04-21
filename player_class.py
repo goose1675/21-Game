@@ -30,5 +30,20 @@ class Player:# My first class that stores the player and dealer's information.
         self.points = 0
         self.blackjack = False
     
+    def take_turn(self, deck):
+        if self.blackjack:
+            return  # Skip turn if player already has Blackjack
+
+        while self.points < 21:
+            choice = input(f"{self.name}, do you want to hit (h) or stand (s)? ").lower()
+            if choice == "h":
+                card = deck.pop()
+                print("You drew:", card)
+                self.add_card(card)
+                print(self)
+            else:
+                break
+    
     def __str__(self):
         return self.name +  "'s hand: " + str(self.hand) + "| Points: " +  str(self.points)
+    

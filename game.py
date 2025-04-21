@@ -38,7 +38,7 @@ def blackjack():
     random.shuffle(deck) # This shuffles the deck to make sure the cards are random
     
     num_players = int(input("How many players are playing? (1-3): "))
-    players = [Player(input("Enter a name for player" + str(i +1) + ": ")) for i in range(num_players)]
+    players = [Player(input("Enter a name for player " + str(i +1) + ": ")) for i in range(num_players)]
     dealer = Player("Dealer", is_dealer=True) 
    
     running = True
@@ -84,23 +84,12 @@ def blackjack():
         print("\nDealer's hand: " + str(dealer.hand[0]) + " and a hidden card\n") # This prints the dealers hand with one card hidden
         #for example: "Dealer's hand: ['ace of hearts', '2 of hearts'] and a hidden card"
 
-        for player in players: #each playur gets to play their turn 
-            
-            if player.blackjack:
-                continue  # Skip turn if player already has Blackjack
+         #each playur gets to play their turn 
+        for player in players:
+            player.take_turn(deck)    
+      # Skip turn if player already has Blackjack
 
-            
-            while player.points < 21: # The player can keep hitting until they reach 21 or bust
-                choice = input(str(player.name) + ", do you want to hit (h) or stand (s)? ").lower()
-                if choice == "h":
-                    card = deck.pop() # The player draws a card from the deck
-                    print("You drew: " + card)
-                    player.add_card(card)
-                    print(player) # This prints the players hand and their points
-                else:
-                    break #This breaks the loop and ends the players turn
-
-
+       
         print("\nDealer's turn:") # The dealer's turn starts here
         print(dealer) # This prints the dealers hand and their points       
         while dealer.points < 17: 
