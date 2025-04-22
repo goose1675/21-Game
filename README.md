@@ -23,6 +23,7 @@ Make sure you have Python installed
 - To run the game, you must have the game.py file downloaded 
 - To actually play the game, run it in the Terminal 
 
+![image](https://github.com/user-attachments/assets/26c07b56-b54c-4393-8b1f-d13c1a750cfa)
 
 ## Author and Information
 - Made by: Agam Sabharwal 
