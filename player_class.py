@@ -35,7 +35,7 @@ class Player:# My first class that stores the player and dealer's information.
             return  # Skip turn if player already has Blackjack
 
         while self.points < 21:
-            choice = input(f"{self.name}, do you want to hit (h) or stand (s)? ").lower()
+            choice = input("\n" + self.name + ", would you like to Hit(h) or Stand(s)? ").lower()
             if choice == "h":
                 card = deck.pop()
                 print("You drew:", card)
