@@ -1,11 +1,65 @@
 import random
-from player_class import Player # This imports the Player class from the player_class file
 
 
-#
+"""from player_class import Player # This imports the Player class from the player_class file""" #not needed anymore
+
+
+class Player:# My first class that stores the player and dealer's information.
+    def __init__(self, name, is_dealer=False): 
+        self.name = name
+        self.hand = [] # The hand is a list that stores the cards the player has in their hand.
+        self.points = 0
+        self.is_dealer = is_dealer #A way to check if the player is a dealer 
+        self.blackjack = False # A way to check if the player has a blackjack
+        if is_dealer!= True: 
+            self.balance = 1000
+        else:
+            self.balance = 0
+    
+    def add_card(self, card): # This adds a card to the player's hand and calculates the points
+        self.hand.append(card)
+        self.calculate_points(card)
+
+    def calculate_points(self, card):# This calculates the points for the player based on the card they have drawn
+        if "ace" in card:
+            if self.points + 11 <= 21:
+                self.points += 11
+            else:
+                self.points += 1
+        elif "jack" in card or "queen" in card or "king" in card or "10" in card: 
+            self.points += 10
+        else:
+            self.points += int(card.split("of")[0]) # This splits the card string and gets the number of the card 
+
+    def reset_hand(self): # This resets the player's hand and points for the next round
+        self.hand = []
+        self.points = 0
+        self.blackjack = False
+    
+    def take_turn(self, deck):
+        if self.blackjack:
+            return  # Skip turn if player already has Blackjack
+
+        while self.points < 21: # This loop asks the player if they want to hit or stand
+            choice = input("\n" + self.name + ", would you like to Hit(h) or Stand(s)? ").lower()
+            if choice == "h":
+                card = deck.pop()
+                print("You drew:", card)
+                self.add_card(card)# This adds the card to the player's hand and calculates the points
+                print(self)
+            else:
+                break
+    
+    def __str__(self): # This prints the player's hand and points
+        return self.name +  "'s hand: " + str(self.hand) + "| Points: " +  str(self.points)
+    
+
+
+
 
 types = ["hearts", "diamonds", "spades", "clubs"]
 num = ["ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"]
+# This creates a list of types and numbers for the cards
 
 def create_deck(): # A function that creates a deck of cards with 52 cards in total. 
     deck = []
