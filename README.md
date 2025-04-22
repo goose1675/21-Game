@@ -20,8 +20,8 @@ A simple and fun multiplayer game built with Python. Play against a dealer, alon
 Make sure you have Python installed 
 
 ## Running the Game
-To run the game, you must have the game.py file downloaded 
-To play the game, run it in the Terminal 
+- To run the game, you must have the game.py file downloaded 
+- To actually play the game, run it in the Terminal 
 
 
 ## Author and Information
