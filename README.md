@@ -1,5 +1,5 @@
 # A Blackjack Game
-A simple and fun multiplayer game built with Python. Play against a dealer, alongside some friends, or play solo. 
+A simple and fun multiplayer game built with Python. Play against a dealer alongside some friends, or play solo. 
 
 ## Features
 - Supports Multiplayer
